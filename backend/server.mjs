@@ -1,37 +1,46 @@
-import dotenv from 'dotenv';  
-import https from 'https';  
-import fs from 'fs';  
-import express from 'express';  
-import mongoose from 'mongoose'; // Import mongoose for MongoDB connection  
-import auth from './routes/authRoutes.js'; 
-import payment from './routes/paymentRoutes.js'; 
+import dotenv from "dotenv";
+import https from "https";
+import fs from "fs";
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import auth from "./routes/authRoutes.js";
+import payment from "./routes/paymentRoutes.js";
 
-dotenv.config();  
+dotenv.config();
 
-const app = express();  
+const app = express();
 
-// Middleware to parse JSON request bodies  
-app.use(express.json());  
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
-// MongoDB connection  
-mongoose.connect(process.env.ATLAS_URL)  
-    .then(() => console.log('MongoDB connected'))  
-    .catch(err => console.log('MongoDB connection error:', err));  
+// Middleware to parse JSON request bodies
+app.use(express.json());
 
-// Define routes  
-app.use('/api/auth', auth); 
-app.use('/api/payment', payment);
+// MongoDB connection
+mongoose
+  .connect(process.env.ATLAS_URL)
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.log("MongoDB connection error:", err));
 
-const privateKey = fs.readFileSync('keys/privatekey.pem', 'utf8');  
-const certificate = fs.readFileSync('keys/certificate.pem', 'utf8');  
+// Define routes
+app.use("/api/auth", auth);
+app.use("/api/payment", payment);
 
-const credentials = {  
-    key: privateKey,  
-    cert: certificate,  
-};  
+const privateKey = fs.readFileSync("keys/privatekey.pem", "utf8");
+const certificate = fs.readFileSync("keys/certificate.pem", "utf8");
 
-const httpsServer = https.createServer(credentials, app);  
+const credentials = {
+  key: privateKey,
+  cert: certificate,
+};
 
-httpsServer.listen(process.env.PORT, () => {  
-    console.log(`HTTPS Server running on port ${process.env.PORT}`);   
+const httpsServer = https.createServer(credentials, app);
+
+httpsServer.listen(process.env.PORT, () => {
+  console.log(`HTTPS Server running on port ${process.env.PORT}`);
 });

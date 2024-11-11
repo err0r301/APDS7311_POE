@@ -5,15 +5,31 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(""); // Reset error message
+    try {
+      const response = await fetch("https://localhost:4000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
 
-    // Add your authentication logic here
-    if (username === "admin" && password === "password") {
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.message || "Login failed");
+        return; // Exit if there's an error response from the server
+      }
+
+      const data = await response.json();
       alert("Login successful!");
+      // Optionally, store the token or user data in localStorage or context
+      localStorage.setItem("token", data.token);
       // Redirect or perform another action
-    } else {
-      setError("Invalid username or password");
+    } catch (err) {
+      setError(err.message || "An unexpected error occurred");
     }
   };
 
@@ -27,11 +43,12 @@ const Login = () => {
         borderRadius: "5px",
       }}
     >
-      <h2>Login</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      <h2>Login Form</h2>
+      {error && <p style={{ color: "red" }}>{error}</p>}{" "}
+      {/* Display error message */}
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Username</label>
+        <div className="input_field">
+          <label htmlFor="username">Username:</label>
           <input
             type="text"
             id="username"
@@ -40,8 +57,8 @@ const Login = () => {
             required
           />
         </div>
-        <div>
-          <label htmlFor="password">Password</label>
+        <div className="input_field">
+          <label htmlFor="password">Password:</label>
           <input
             type="password"
             id="password"
@@ -52,6 +69,12 @@ const Login = () => {
         </div>
         <button type="submit">Login</button>
       </form>
+      <p>
+        Don't have an account?{" "}
+        <a href="/register" className="link">
+          Sign Up
+        </a>
+      </p>
     </div>
   );
 };
