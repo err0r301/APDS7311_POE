@@ -4,12 +4,15 @@ import fs from "fs";
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import helmet from "helmet";
 import auth from "./routes/authRoutes.js";
 import payment from "./routes/paymentRoutes.js";
 
 dotenv.config();
 
 const app = express();
+
+app.use(helmet());
 
 app.use(
   cors({
