@@ -61,6 +61,7 @@ const UserInfoForm = () => {
             const errorData = await response.json();
             errorMessage = errorData.message || errorMessage;
           } catch (err) {
+            console.error("Error in register:", err);
             errorMessage = (await response.text()) || errorMessage;
           }
 

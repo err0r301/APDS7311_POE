@@ -36,6 +36,7 @@ const Login = () => {
         navigate("/paymentPortal");
       }
     } catch (err) {
+      console.error("Error in login:", err);
       setError(err.message || "An unexpected error occurred");
     }
   };
