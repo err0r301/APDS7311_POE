@@ -12,34 +12,33 @@ module.exports.register = async (req, res) => {
     const sanitizedUsername = validator.escape(username);
     const user = await User.findOne({ username: sanitizedUsername });
     if (user) {
-      return res.status(400).send("User already exists");
+      return res.status(400).json({ message: "User already exists" });
     }
   } catch (error) {
-    return res.status(500).send("Internal server error");
+    return res.status(500).json({ message: "Internal server error" });
   }
 
   // Check if ID number is unique
   const sanitizedIDNumber = validator.escape(IDNumber);
   const IDNumberExists = await User.findOne({ IDNumber: sanitizedIDNumber });
   if (IDNumberExists) {
-    return res.status(400).send("ID number already exists");
+    return res.status(400).json({ message: "ID number already exists" });
   }
 
   // Check if password is strong
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   if (!passwordRegex.test(password)) {
-    return res
-      .status(400)
-      .send(
-        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character"
-      );
+    return res.status(400).json({
+      message:
+        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character",
+    });
   }
 
   // check if ID number is valid
   const IDNumberRegex = /^[0-9]{13}$/;
   if (!IDNumberRegex.test(IDNumber)) {
-    return res.status(400).send("Invalid ID number");
+    return res.status(400).json({ message: "Invalid ID number" });
   }
 
   // check if username is valid
@@ -49,12 +48,12 @@ module.exports.register = async (req, res) => {
     typeof username !== "string" ||
     !usernameRegex.test(username)
   ) {
-    return res.status(400).send("Invalid username");
+    return res.status(400).json({ message: "Invalid username" });
   }
 
   const nameRegex = /^[a-zA-Z]+$/;
   if (!username || typeof username !== "string" || !nameRegex.test(username)) {
-    return res.status(400).send("Invalid name");
+    return res.status(400).json({ message: "Invalid name" });
   }
 
   const surnameRegex = /^[a-zA-Z]+$/;
@@ -63,7 +62,7 @@ module.exports.register = async (req, res) => {
     typeof username !== "string" ||
     !surnameRegex.test(username)
   ) {
-    return res.status(400).send("Invalid surname");
+    return res.status(400).json({ message: "Invalid surname" });
   }
 
   // Hash password
@@ -80,7 +79,7 @@ module.exports.register = async (req, res) => {
     password: hashedPassword,
   });
   await newUser.save();
-  res.status(200).send("User registered successfully");
+  res.status(200).json({ message: "User registered successfully" });
 };
 
 module.exports.login = async (req, res) => {

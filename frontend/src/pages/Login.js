@@ -9,7 +9,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Reset error message
+    setError(""); //
     try {
       const response = await fetch("https://localhost:4000/api/auth/login", {
         method: "POST",
@@ -22,7 +22,7 @@ const Login = () => {
       if (!response.ok) {
         const errorData = await response.json();
         setError(errorData.message || "Login failed");
-        return; // Exit if there's an error response from the server
+        return;
       }
 
       const data = await response.json();
