@@ -155,7 +155,6 @@ const PaymentPortal = () => {
               <th>Provider</th>
               <th>Recipient Account</th>
               <th>Swift Code</th>
-              <th>Status</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -168,7 +167,6 @@ const PaymentPortal = () => {
                   <td>{payment.provider}</td>
                   <td>{payment.accountInfo.recipientAccount}</td>
                   <td>{payment.accountInfo.swiftCode}</td>
-                  <td>{payment.status}</td>
                   <td>
                     <button onClick={() => handleVerifyPayment(payment._id)}>
                       Verify
@@ -195,7 +193,6 @@ const PaymentPortal = () => {
               <th>Provider</th>
               <th>Recipient Account</th>
               <th>Swift Code</th>
-              <th>Status</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -208,7 +205,6 @@ const PaymentPortal = () => {
                   <td>{payment.provider}</td>
                   <td>{payment.accountInfo.recipientAccount}</td>
                   <td>{payment.accountInfo.swiftCode}</td>
-                  <td>{payment.status}</td>
                   <td>
                     <button onClick={() => handleRevertToPending(payment._id)}>
                       Revert to Pending

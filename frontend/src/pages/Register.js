@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const UserInfoForm = () => {
+  const navigate = useNavigate(); // Initialize navigate function
   const [formData, setFormData] = useState({
     username: "",
     name: "",
@@ -41,7 +43,6 @@ const UserInfoForm = () => {
       setErrors({});
 
       try {
-        // Send form data to the backend
         const response = await fetch(
           "https://localhost:4000/api/auth/register",
           {
@@ -56,12 +57,10 @@ const UserInfoForm = () => {
         if (!response.ok) {
           let errorMessage = "Registration failed";
 
-          // Attempt to parse the response as JSON
           try {
             const errorData = await response.json();
             errorMessage = errorData.message || errorMessage;
           } catch (err) {
-            // If response is not JSON, fall back to plain text
             errorMessage = (await response.text()) || errorMessage;
           }
 
@@ -78,6 +77,8 @@ const UserInfoForm = () => {
           accountNumber: "",
           password: "",
         });
+
+        navigate("/"); // Redirect to the home page after successful registration
       } catch (error) {
         setErrors({ form: error.message || "An unexpected error occurred" });
       }
@@ -178,8 +179,7 @@ const UserInfoForm = () => {
           Sign In
         </a>
       </p>
-      {errors.form && <p style={{ color: "red" }}>{errors.form}</p>}{" "}
-      {/* Display form-wide error */}
+      {errors.form && <p style={{ color: "red" }}>{errors.form}</p>}
     </div>
   );
 };

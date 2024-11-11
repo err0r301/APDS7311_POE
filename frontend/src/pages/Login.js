@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const Login = () => {
+  const navigate = useNavigate(); // Initialize navigate function
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -25,9 +27,14 @@ const Login = () => {
 
       const data = await response.json();
       alert("Login successful!");
-      // Optionally, store the token or user data in localStorage or context
       localStorage.setItem("token", data.token);
-      // Redirect or perform another action
+
+      // Navigate based on userType
+      if (data.userType === "user") {
+        navigate("/payment");
+      } else if (data.userType === "admin") {
+        navigate("/paymentPortal");
+      }
     } catch (err) {
       setError(err.message || "An unexpected error occurred");
     }
