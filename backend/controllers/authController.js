@@ -18,7 +18,8 @@ module.exports.register = async (req, res) => {
   }
 
   // Check if ID number is unique
-  const IDNumberExists = await User.findOne({ IDNumber });
+  const sanitizedIDNumber = validator.escape(IDNumber);
+  const IDNumberExists = await User.findOne({ IDNumber: sanitizedIDNumber });
   if (IDNumberExists) {
     return res.status(400).send("ID number already exists");
   }
