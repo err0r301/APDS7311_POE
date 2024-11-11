@@ -8,7 +8,8 @@ module.exports.register = async (req, res) => {
 
   // Check if user already exists
   try {
-    const user = await User.findOne({ username });
+    const sanitizedUsername = validator.escape(username);
+    const user = await User.findOne({ username: sanitizedUsername });
     if (user) {
       return res.status(400).send("User already exists");
     }
